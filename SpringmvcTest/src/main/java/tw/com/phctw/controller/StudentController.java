@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,9 +31,9 @@ public class StudentController {
 		return mv;
 	}
 	
-	@GetMapping(value = "/get")
-	public ModelAndView get(@RequestParam String sno){
-		ModelAndView mv = new ModelAndView("showInfo");
+	@RequestMapping(value = "/get/{sno}")
+	public ModelAndView get(@PathVariable("sno") String sno){
+		ModelAndView mv = new ModelAndView("showOneInfo");
 		Student student = service.getStudentDaoImpl().getStudentBySno(sno);
 		mv.addObject("student", student);
 		

@@ -8,24 +8,28 @@ public class Student {
 	private String sname;
 	private Date sbday;
 	private Integer ssex;
-	private String sacc;
 	private String smail;
+	private String sacc;
 	private String spwd;
 
 	public Student() {
 		super();
 	}
 
-	public Student(String sno, String sname, Date sbday, Integer ssex, String sacc, String smail, String spwd) {
+	
+
+	public Student(String sno, String sname, Date sbday, Integer ssex, String smail, String sacc, String spwd) {
 		super();
 		this.sno = sno;
 		this.sname = sname;
 		this.sbday = sbday;
 		this.ssex = ssex;
-		this.sacc = sacc;
 		this.smail = smail;
+		this.sacc = sacc;
 		this.spwd = spwd;
 	}
+
+
 
 	public String getSno() {
 		return sno;
@@ -82,11 +86,11 @@ public class Student {
 	public void setSpwd(String spwd) {
 		this.spwd = spwd;
 	}
-
+	
 	@Override
 	public String toString() {
-		return "Student [sno=" + sno + ", sname=" + sname + ", sbday=" + sbday + ", ssex=" + ssex + ", sacc=" + sacc
-				+ ", smail=" + smail + ", spwd=" + spwd + "]";
+		return "Student [sno=" + sno + ", sname=" + sname + ", sbday=" + sbday + ", ssex=" + ssex + ", smail=" + smail
+				+ ", sacc=" + sacc + ", spwd=" + spwd + "]";
 	}
 
 }

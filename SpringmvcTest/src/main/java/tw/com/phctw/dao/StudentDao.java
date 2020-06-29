@@ -13,6 +13,6 @@ public interface StudentDao {
 
 	boolean updateStudent(Student student);
 
-	boolean createStudent(Student student);
+	boolean insertStudent(Student student);
 	
 }
