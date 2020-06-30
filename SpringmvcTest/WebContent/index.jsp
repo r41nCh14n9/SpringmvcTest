@@ -6,6 +6,10 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<title>Spring 4 MVC - HelloWorld Index Page</title>
+		<script>
+			window.location.href = 'home';
+		</script>
+		
 	</head>
 	<body>
 	 	<center>

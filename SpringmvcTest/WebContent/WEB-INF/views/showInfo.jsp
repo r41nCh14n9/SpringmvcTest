@@ -18,6 +18,7 @@
 			<th>帳號</th>
 			<th>email</th>
 			<th>密碼</th>
+			<th>已驗證</th>
 		</tr>
 		<c:forEach var="student" items="${students}">
 			<tr>
@@ -28,6 +29,7 @@
 				<td>${student.sacc}</td>
 				<td>${student.smail}</td>
 				<td>${student.spwd}</td>
+				<td>${student.confirm == 1? '是':'否'}</td>
 			</tr>
 		</c:forEach>
 	</table>

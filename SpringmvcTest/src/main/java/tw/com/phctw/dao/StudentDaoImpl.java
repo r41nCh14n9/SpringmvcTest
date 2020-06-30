@@ -19,13 +19,15 @@ public class StudentDaoImpl implements StudentDao{
 	private final String SQL_FIND_STUDENT_LOGIN = "select * from Student3 where sacc = ? and spwd = ?";
 	private final String SQL_FIND_STUDENT_REG = "select * from Student3 where sacc = ?";
 	private final String SQL_FIND_STUDENT_FOR = "select * from Student3 where sacc = ? and smail = ?";
-//	private final String SQL_DELETE_Student = "delete from Student where id = ?";
+	private final String SQL_FIND_STUDENT_CONF = "select * from Student3 where confirm = ?";
+	//	private final String SQL_DELETE_Student = "delete from Student where id = ?";
 //	private final String SQL_UPDATE_Student = "update Student3 set first_name = ?, last_name = ?, age  = ? where id = ?";
 	private final String SQL_UPDATE_Student_FOR = "update Student3 set spwd = ? where sno = ?";
+	private final String SQL_UPDATE_Student_CONF = "update Student3 set confirm = ? where sno = ?";
 	
 	private final String SQL_GET_ALL = "select * from Student3";
-	private final String SQL_INSERT_STUDENT = "insert into Student3(SNO, SNAME, SBDAY, SSEX, SMAIL, SACC, SPWD) VALUES (?,?,?,?,?,?,?)";
-	
+	private final String SQL_INSERT_STUDENT = "insert into Student3(SNO, SNAME, SBDAY, SSEX, SMAIL, SACC, SPWD, CONFIRM) VALUES (?,?,?,?,?,?,?,?)";
+	private final String SQL_CHECK_CONFIRM = "select confirm from student3 where sno = ?";
 	
 	
 	@Autowired
@@ -45,12 +47,14 @@ public class StudentDaoImpl implements StudentDao{
 	//login
 	public Student getStudentForLogin(Login login) {
 		try {
-			return jdbcTemplate.queryForObject(SQL_FIND_STUDENT_LOGIN, new StudentMapper(), login.getSacc(), login.getSpwd());
+			Student student = jdbcTemplate.queryForObject(SQL_FIND_STUDENT_LOGIN, new StudentMapper(), login.getSacc(), login.getSpwd());
+//			System.out.println("dao get : "+student);
+			return student;
 		} catch (Exception e) {
 			return null;
 		}
-		
 	}
+	
 	
 	//register
 	public Student getStudentBySacc(String sacc) {
@@ -65,6 +69,39 @@ public class StudentDaoImpl implements StudentDao{
 		}
 		return student;
 	}
+	
+	//get confirm account
+	public Student getStudentByConf(String confirm) {
+		Student s = new Student();
+		try {
+			s = jdbcTemplate.queryForObject(SQL_FIND_STUDENT_CONF, new StudentMapper(), confirm);
+			System.out.println(s);
+		} catch (Exception e) {
+			return null;
+		}
+		return s;
+	}
+	//update confirm code
+	public boolean updateStudentConf(Student student, String conf) {
+		try {
+			jdbcTemplate.update(SQL_UPDATE_Student_CONF, conf, student.getSno());
+		} catch (Exception e) {
+			System.out.println("update fail");
+			return false;
+		}
+		return true;
+	}
+	//get confirm code
+	public String checkStudentConf(Student student) {
+		String conf="";
+		try {
+			conf += jdbcTemplate.queryForObject(SQL_CHECK_CONFIRM, String.class,student.getSno());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return conf;
+	}
+	
 	
 	@Override
 	public List<Student> getAllStudents() {
@@ -110,7 +147,7 @@ public class StudentDaoImpl implements StudentDao{
 	public boolean insertStudent(Student student) {
 		try {
 			jdbcTemplate.update(SQL_INSERT_STUDENT, student.getSno(), student.getSname(), student.getSbday(),
-					student.getSsex(), student.getSmail(), student.getSacc(), student.getSpwd());
+					student.getSsex(), student.getSmail(), student.getSacc(), student.getSpwd(),student.getConfirm());
 		} catch (Exception e) {
 			System.out.println("insert fail");
 			return false;
@@ -122,8 +159,8 @@ public class StudentDaoImpl implements StudentDao{
 	public String findMaxId() {
 		String id = "";
 		try {
-			Student student = jdbcTemplate.queryForObject(SQL_FIND_STUDENT_MAXSNO, new StudentMapper());
-			id += student.getSno();
+			id += jdbcTemplate.queryForObject(SQL_FIND_STUDENT_MAXSNO, String.class);
+			System.out.println("sno = " + id);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -131,6 +168,12 @@ public class StudentDaoImpl implements StudentDao{
 		return id;
 	}
 	
+	public static void main(String[] args) {
+		StudentDaoImpl dao = new StudentDaoImpl();
+		System.out.println(new StudentDaoImpl().findMaxId());
+//		dao.getAllStudents().forEach(System.out::println);
+		
+	}
 	
 }
 
@@ -147,6 +190,7 @@ class StudentMapper implements RowMapper<Student> {
 		student.setSmail(rs.getString("smail"));
 		student.setSpwd(rs.getString("spwd"));
 		student.setSacc(rs.getString("sacc"));
+		student.setConfirm(rs.getString("confirm"));
 
 		return student;
 	}

@@ -14,7 +14,7 @@
 		<table style="text-align: center;">
 			<tr>
 				<td><form:label path="sacc">Student AccountName</form:label></td>
-				<td><form:input path="sacc" name="sacc" id="sacc" onblur="check()"/>
+				<td><form:input path="sacc" name="sacc" id="sacc" onblur="checkAcc()"/>
 				
 				</td>
 			</tr>
@@ -40,23 +40,23 @@
 			</tr>
 			<tr>
 				<td><form:label path="smail">Student Email</form:label></td>
-				<td><form:input path="smail" name="semail" id="semail" /></td>
+				<td><form:input path="smail" name="smail" id="smail" onchange="emailCheck()"/></td>
 			</tr>
 			
 			<tr></tr>
 			<tr>
-				<td><a href="home.jsp">Home</a></td>
+				<td><a href="/SpringmvcTest/home">Home</a></td>
 				<td><form:button type="submit">Sign up</form:button></td>
 			</tr>
 		</table>
 	</form:form>
 	<table>
 			<tr>
-				<td><span id="msg"></span></td>
+				<td><span id="msg">${message}</span></td>
 			</tr>
 	</table>
 <script>
-	function check(){
+	function checkAcc(){
 		var sacc = $("#sacc").val();
 		//用ajax去資料庫匹配
 		$.ajax({ 
@@ -72,6 +72,21 @@
 				}
 			} });
 	}
+	
+	function emailCheck () {
+		var emailStr=$("#smail").val();
+		//alert(emailStr);
+		var emailPat = /^[a-zA-Z]{1}[\w-]+@[a-z0-9]+\.[a-z]+$/;
+		var reShort = /^[a-zA-Z]{1}[\w-]+@[a-z0-9]+\.[a-z]+$/;
+	    var reLong = /^[a-zA-Z]{1}[\w-]+@[a-z0-9]+\.[a-z]+\.[a-z]+$/;
+		var matchArray = reShort.test(emailStr) || reLong.test(emailStr);
+		//alert(matchArray);
+		if (!matchArray) {
+			alert("電子郵件地址必須包括 ( @ 和 . )")
+		return false;
+		}
+		return true;
+		}
 </script>
 </body>
 </html>

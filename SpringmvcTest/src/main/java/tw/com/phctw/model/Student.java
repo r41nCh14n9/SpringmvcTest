@@ -11,14 +11,14 @@ public class Student {
 	private String smail;
 	private String sacc;
 	private String spwd;
+	private String confirm;
 
 	public Student() {
 		super();
 	}
 
-	
-
-	public Student(String sno, String sname, Date sbday, Integer ssex, String smail, String sacc, String spwd) {
+	public Student(String sno, String sname, Date sbday, Integer ssex, String smail, String sacc, String spwd,
+			String confirm) {
 		super();
 		this.sno = sno;
 		this.sname = sname;
@@ -27,9 +27,8 @@ public class Student {
 		this.smail = smail;
 		this.sacc = sacc;
 		this.spwd = spwd;
+		this.confirm = confirm;
 	}
-
-
 
 	public String getSno() {
 		return sno;
@@ -86,11 +85,19 @@ public class Student {
 	public void setSpwd(String spwd) {
 		this.spwd = spwd;
 	}
-	
+
+	public String getConfirm() {
+		return confirm;
+	}
+
+	public void setConfirm(String confirm) {
+		this.confirm = confirm;
+	}
+
 	@Override
 	public String toString() {
 		return "Student [sno=" + sno + ", sname=" + sname + ", sbday=" + sbday + ", ssex=" + ssex + ", smail=" + smail
-				+ ", sacc=" + sacc + ", spwd=" + spwd + "]";
+				+ ", sacc=" + sacc + ", spwd=" + spwd + ", confirm=" + confirm + "]";
 	}
 
 }

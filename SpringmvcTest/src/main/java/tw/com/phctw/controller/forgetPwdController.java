@@ -23,7 +23,7 @@ public class forgetPwdController {
 	@Autowired
 	StudentService service;
 
-	@GetMapping(value = "/forget")
+	@GetMapping(value = "/forgetPwd")
 	public ModelAndView showForgetPage(HttpServletRequest req, HttpServletResponse resp) {
 		ModelAndView mv = new ModelAndView("forgetPwd");
 		mv.addObject("student", new Student());
@@ -37,12 +37,13 @@ public class forgetPwdController {
 		System.out.println("in Process...");
 		ModelAndView mv = null;
 
-		
-		if (service.checkForgotenStd(student.getSacc(), student.getSmail())) {
-			//...
+		Student std = service.checkForgotenStd(student.getSacc(), student.getSmail());
+		if (std!=null) {
+			service.resetPwd(std);
+			mv = new ModelAndView("redirect:/");
 		} else {
-			mv = new ModelAndView("forget");
-			mv.addObject("message", "AccountName or Student Mail is invalid!!");
+			mv = new ModelAndView("forgetPwd");
+			mv.addObject("msg", "AccountName or Student Mail is invalid!!");
 		}
 		return mv;
 	}
@@ -52,7 +53,7 @@ public class forgetPwdController {
 	public boolean isExist(Model model,
 			@RequestParam("sacc") String sacc, @RequestParam("smail") String smail) { 
 		System.out.println(sacc + " : " + smail);
-	    boolean exist = service.checkForgotenStd(sacc, smail);
+	    boolean exist = (service.checkForgotenStd(sacc, smail)!=null);
 	    System.out.println(exist);
 	    if(exist) {  
 	        return true;  

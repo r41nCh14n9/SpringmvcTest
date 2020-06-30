@@ -11,16 +11,18 @@ import tw.com.phctw.dao.StudentDaoImpl;
 import tw.com.phctw.model.Login;
 import tw.com.phctw.model.Student;
 import tw.com.phctw.util.ForgetPwdMail;
+import tw.com.phctw.util.VerificationMail;
 
 @Service
 public class StudentService {
-	
-	
 	@Autowired
 	private StudentDaoImpl dao;
 	
 	@Autowired
 	private ForgetPwdMail fpm;
+	
+	@Autowired
+	private VerificationMail vm;
 
 	public StudentDaoImpl getStudentDaoImpl() {
 		return dao;
@@ -28,9 +30,10 @@ public class StudentService {
 
 	//login
 	public Student validateStudent(Login login) {
+		login.setSpwd(getMD5Endocing(login.getSpwd()));
 		Student student = dao.getStudentForLogin(login);
 		if (student!=null) {
-			System.out.println("account exist.");
+			System.out.println("account exist." );
 		}else {
 			System.out.println("account is invalid.");
 		}
@@ -49,32 +52,58 @@ public class StudentService {
 	}
 	//register
 	public boolean register(Student student) {
-		System.out.println("student : " + student);
+		System.out.println(student);
 		
 		Integer max = Integer.parseInt(dao.findMaxId().split("A")[1]);
-		student.setSno("A" + (max + 1));
-		student.setSpwd(getMD5Endocing(student.getSpwd()));
-		System.out.println("student : " + student);
+		System.out.println(max);
 		
-		return dao.insertStudent(student);
+		String newSno = "A" + String.format("%06d", (max + 1));
+		String encPwd = getMD5Endocing(student.getSpwd());
+		student.setSno(newSno);
+		student.setSpwd(encPwd);
+		System.out.println(student);
+		
+		//send confirm mail
+		String conf = vm.veriCode();
+		student.setConfirm(conf);
+		if(dao.insertStudent(student)) {
+			System.out.println("學生資料建立成功，等待驗證...");
+			vm.send(student.getSmail(), conf);
+			return true;
+		}else {
+			System.out.println("學生資料建立失敗");
+			return false;
+		}
+	}
+	
+	public boolean confirmAcc(Student student) {
+		try {
+			dao.updateStudentConf(student, "1");
+			System.out.println("Confirm Successfully.");
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	//forgetPwd check
-	public boolean checkForgotenStd(String sacc, String smail) {
-		if(dao.getStudentBySaccAndSmail(sacc, smail) != null) {
-			//System.out.println("not null");
-			return true;
+	public Student checkForgotenStd(String sacc, String smail) {
+		Student student = dao.getStudentBySaccAndSmail(sacc, smail);
+		if (student!=null) {
+			System.out.println("account exist.");
 		}else {
-			//System.out.println("null");
-			return false;
+			System.out.println("account is invalid.");
 		}
+		return student;
 	}
 	//reset Pwd
 	public boolean resetPwd(Student student) {
 		String newPwd = fpm.createPwd();
+		String encPwd = getMD5Endocing(newPwd);
 		String toAddr = student.getSmail();
 		
-		if(dao.updateStudentPwd(student, newPwd)) {
+		if(dao.updateStudentPwd(student, encPwd)) {
 			fpm.send(toAddr, newPwd);
 			return true;
 		}else {
@@ -104,8 +133,13 @@ public class StudentService {
 
 	
 	public static void main(String[] args) {
-		String message = "123456";
-//		System.out.println(new StudentService().getMD5Endocing(message));
+		String message = "12345";
+		StudentService service = new StudentService();
+		System.out.println(service.getMD5Endocing(message));
+		
+//		service.getStudentDaoImpl().getAllStudents().forEach(System.out::println);
+		
+	
 	}
 	
 	

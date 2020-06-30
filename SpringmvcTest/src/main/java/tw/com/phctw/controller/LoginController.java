@@ -36,14 +36,20 @@ public class LoginController {
 		ModelAndView mv = null;
 
 		Student s = service.validateStudent(login);
-
-		if (s != null) {
-			String sno = s.getSno();
-			mv = new ModelAndView("redirect:/student/get/"+sno);
-			mv.addObject("student", s);
-		} else {
+//		System.out.println(s);
+		
+		if (s == null) {
 			mv = new ModelAndView("login");
 			mv.addObject("message", "AccountName or Password is wrong!!");
+
+		} else if (s.getConfirm().compareTo("1")!=0) {
+//			System.out.println("compare : "+s.getConfirm().compareTo("1"));
+			mv = new ModelAndView("login");
+			mv.addObject("message", "Account is not confirmed yet!!");
+		} else {
+			String sno = s.getSno();
+			mv = new ModelAndView("redirect:/student/get/" + sno);
+			mv.addObject("student", s);
 		}
 
 		return mv;

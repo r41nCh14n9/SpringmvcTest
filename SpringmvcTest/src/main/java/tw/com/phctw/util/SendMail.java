@@ -13,8 +13,8 @@ import javax.mail.internet.MimeMessage;
 
 public class SendMail {
 	// gmail
-	private static final String username = "ann1234555@gmail.com";
-	private static final String password = "kwektvfpqoqwbdgw"; // 授權碼, 不是 email 的密碼
+	private final String username = "ann1234555@gmail.com";
+	private final String password = "kwektvfpqoqwbdgw"; // 授權碼, 不是 email 的密碼
 	//private static final String to = "ann1234555@yahoo.com.tw";
 
 	public void sendMail(String toAddr,String subject, String content) {

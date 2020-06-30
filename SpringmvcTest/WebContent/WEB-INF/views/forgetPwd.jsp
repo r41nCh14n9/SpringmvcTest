@@ -9,7 +9,7 @@
 </head>
 <body>
 	<form:form method="post" action="resetPwdProcess" modelAttribute="student"
-		id="restPwdForm">
+		id="restForm">
 
 		<table style="text-align: center;">
 			<tr>
@@ -22,8 +22,8 @@
 				<td><form:input path="smail" /></td>
 			</tr>
 			<tr>
-				<td>返回</td>
-				<td>重設密碼</td>
+				<td><a href="/SpringmvcTest/home">返回</a></td>
+				<td><form:button type="submit">重設密碼</form:button></td>
 			</tr>
 			<tr>
 				<td colspan="2" id="msg">${msg}</td>

@@ -41,14 +41,18 @@ public class RegistrationController {
 		
 		//check if student is exist
 		if(!service.checkSaccExist(student.getSacc())) {
-			mv.addObject("register", true);
+			service.register(student);
+			System.out.println(student);
+			//mv = new ModelAndView("redirect:/student/get/"+student.getSno());
+			//mv.addObject("student", student);
+			mv = new ModelAndView("redirect:/");
 		} else {
 			mv = new ModelAndView("register");
 			mv.addObject("message", "AccountName or Password is wrong!!");
 		}
 		
 		
-		return mv;//??
+		return mv;
 	}
 	
 	@ResponseBody  
@@ -62,4 +66,6 @@ public class RegistrationController {
 	    }  
 	    return false;  
 	} 
+
+	
 }
